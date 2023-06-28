@@ -44,18 +44,48 @@ export default {
         ['bootstrap-vue/nuxt', { icons: true, css: true }],
         // https://go.nuxtjs.dev/axios
         '@nuxtjs/axios',
+        '@nuxtjs/auth',  
+        '@nuxtjs/toast',
+        '@nuxtjs/dotenv',
     ],
 
     publicRuntimeConfig: {
         axios: {
-            baseURL: process.env.BASEURL || 'http://127.0.0.1:8000',
+            baseURL: process.env.BASEURL || 'http://127.0.0.1:8100',
         },
     },
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
         // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-        baseURL: process.env.NODE_ENV == 'development' ? 'http://127.0.0.1:8000' : process.env.BASEURL,
+        baseURL: process.env.NODE_ENV == 'development' ? 'http://127.0.0.1:8100' : process.env.BASEURL,
+    },
+
+    auth: {
+        strategies: {
+            local: {
+                token: {
+                    property: 'token',
+                    global: true,
+                    required: true,
+                    name:'Authorization',
+                    type: 'Bearer'
+                },
+                user: {
+                    property: 'user',
+                    // autoFetch: true
+                },
+                endpoints: {
+                    login: { url: 'api/v1/login', method: 'post', propertyName: 'token' },
+                    // user: { url: 'api/v1/users/', method: 'get', propertyName: 'data' },
+                    // post_authors: { url: 'api/v1/authors/create', method: 'post', propertyName: 'data' },
+                    // authors: { url: 'api/v1/authors/', method: 'get', propertyName: 'data' },
+                    //authors: { url: 'api/v1/authors/', method: 'get', propertyName: 'data.token' },
+                    user: false,
+                    logout: false
+                }
+            }
+        }
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
